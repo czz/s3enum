@@ -25,8 +25,7 @@ func NewDNSResolver(nsAddr string) (*DNSResolver, error) {
 	config, err := getConfig(nsAddr)
 
 	if err!=nil {
-		log.Println("action failed: ", err)
-		return
+		return nil,err
 	}
 
 	return &DNSResolver{
