@@ -1,4 +1,4 @@
-module github.com/koenrh/s3enum
+module github.com/czz/s3enum
 
 require github.com/miekg/dns v1.1.61
 
@@ -10,4 +10,6 @@ require (
 	golang.org/x/tools v0.22.0 // indirect
 )
 
-go 1.18
+go 1.23.0
+
+toolchain go1.23.5
