@@ -24,8 +24,9 @@ type DNSResolver struct {
 func NewDNSResolver(nsAddr string) (*DNSResolver, error) {
 	config, err := getConfig(nsAddr)
 
-	if err != nil {
-		return nil, err
+	if err!=nil {
+		log.Println("action failed: ", err)
+		return
 	}
 
 	return &DNSResolver{
