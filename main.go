@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"github.com/czz/s3enum/s3enum"
 )
 
 const version = "1.0.0"
@@ -36,22 +37,22 @@ func main() {
 	resultChannel := make(chan string)
 	resultDone := make(chan bool)
 
-	resolver, err := NewDNSResolver(*nameServerPtr)
+	resolver, err := s3enum.NewDNSResolver(*nameServerPtr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not initialize DNS resolver: %v\n", err)
 		os.Exit(1)
 	}
 
-	consumer := NewConsumer(resolver, wordChannel, resultChannel, wordDone)
+	consumer := s3enum.NewConsumer(resolver, wordChannel, resultChannel, wordDone)
 
 	for i := 0; i < *threadsPtr; i++ {
 		go consumer.Consume()
 	}
 
-	printer := NewPrinter(resultChannel, resultDone, os.Stdout)
+	printer := s3enum.NewPrinter(resultChannel, resultDone, os.Stdout)
 	go printer.PrintBuckets()
 
-	producer, err := NewProducer(*suffixListPtr, wordChannel, resultDone)
+	producer, err := s3enum.NewProducer(*suffixListPtr, wordChannel, resultDone)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not initialize Producer: %v\n", err)
 		os.Exit(1)
