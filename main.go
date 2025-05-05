@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"github.com/czz/s3enum/s3enum"
+	"sync"
 )
 
 const version = "1.0.0"
@@ -43,9 +44,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	consumer := s3enum.NewConsumer(resolver, wordChannel, resultChannel, wordDone)
+	var wg sync.WaitGroup
 
 	for i := 0; i < *threadsPtr; i++ {
+		wg.Add(1)
+		consumer := s3enum.NewConsumer(resolver, wordChannel, resultChannel, resultDone, &wg)
 		go consumer.Consume()
 	}
 
